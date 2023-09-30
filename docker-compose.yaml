@@ -5,7 +5,7 @@ services:
   backend-dev:
     image: app-test-dev:latest
     build: ./backend
-    restart: always
+    restart: on-failure
     ports:
       - "127.0.0.1:8080:8080"
     command: >
@@ -22,39 +22,77 @@ services:
   backend-prod:
     image: app-test-dev:latest
     build: ./backend
-    restart: always
-    ports:
-      - "127.0.0.1:8080:8080"
+    restart: on-failure
+    expose:
+      - "8080"
     command: >
       sh -c "
         python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8080
       "
     volumes:
       - .:/app
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`jsutcheckinghow.com`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls=true"
-      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+    environment:
+      - VIRTUAL_HOST=justcheckinghow.com
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=justcheckinghow.com
     profiles:
       - prod
 
-  reverse-proxy:
-    image: traefik:v2.10
-    command:
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+  nginx-proxy:
+    image: nginx
+    container_name: nginx-proxy
     ports:
-      - "80:80"
-      - "443:443"
+      - "${DOCKER_EGRESS_IP}:80:80"
+      - "${DOCKER_EGRESS_IP}:443:443"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./letsencrypt:/letsencrypt"
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:ro
+      - static:/var/www/backend/static
+    restart: always
     profiles:
       - prod
+
+  docker-gen:
+    image: nginxproxy/docker-gen
+    container_name: nginx-proxy-gen
+    command: >
+      -notify-sighup nginx-proxy
+      -watch /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - ./egress.nginx.conf:/etc/docker-gen/templates/nginx.tmpl:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+    profiles:
+      - prod
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      # TODO: remove - docker-gen should be the only one accessing the socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+      - NGINX_DOCKER_GEN_CONTAINER=nginx-proxy-gen
+      # - ACME_CA_URI=https://acme-staging-v02.api.letsencrypt.org/directory
+      - DEFAULT_EMAIL=${PROXY_MAIL}
+      - DEBUG=1
+    restart: always
+    profiles:
+      - prod
+
+volumes:
+  static:
+  conf:
+  vhost:
+  html:
+  certs:
+  acme:
