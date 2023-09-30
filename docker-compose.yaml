@@ -3,7 +3,7 @@ services:
   # ============== [Dev] ==============
 
   backend-dev:
-    image: app-test-dev:latest
+    image: backend-search-dev:latest
     build: ./backend
     restart: on-failure
     ports:
@@ -16,6 +16,13 @@ services:
       - dev
     volumes:
       - .:/app
+
+  frontend-dev:
+    image: frontend-search-dev:latest
+    build: ./frontend
+    restart: on-failure
+    ports:
+      - "127.0.0.1:80:80"
 
   # ============== [Prod] ==============
 
