@@ -15,7 +15,7 @@ from app.models import (
     Skill,
     SkillsResponse,
 )
-from backend.app.queries import create_es_instance, simple_query
+from app.queries import create_es_instance, simple_query
 
 app = FastAPI()
 
@@ -126,4 +126,4 @@ async def main_search(input_query: QueryBody = Body(...)):
                 score=sub_result["_score"],
             )
         )
-    return FreeSearchResponse(res)
+    return FreeSearchResponse(results=res)

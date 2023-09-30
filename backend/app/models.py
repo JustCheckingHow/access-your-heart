@@ -37,14 +37,14 @@ class CitiesResponse(BaseModel):
     cities: list[City]
 
 
-class QueryBody:
+class QueryBody(BaseModel):
     query: str
 
 
 class KierunekResult(BaseModel):
     kierunek: str
     przedmiot: str
-    link: str
+    syllabus: str
     score: float
 
 
