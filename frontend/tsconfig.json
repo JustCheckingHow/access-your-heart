@@ -24,8 +24,8 @@
   "references": [{ "path": "./tsconfig.node.json" }],
   "baseUrl": ".",
   "paths": {
-    "@/*": ["./src/*"],
     "@components/*": ["./src/components/*"],
-    "@lib/*": ["./src/lib/*"]
+    "@lib/*": ["./src/lib/*"],
+    "@/*": ["./src/*"]
   }
 }
