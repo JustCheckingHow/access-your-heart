@@ -1,5 +1,25 @@
 services:
-  app-test-dev:
+
+  # ============== [Dev] ==============
+
+  backend-dev:
+    image: app-test-dev:latest
+    build: ./backend
+    restart: always
+    ports:
+      - "127.0.0.1:8080:8080"
+    command: >
+      sh -c "
+        python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8080
+      "
+    profiles:
+      - dev
+    volumes:
+      - .:/app
+
+  # ============== [Prod] ==============
+
+  backend-prod:
     image: app-test-dev:latest
     build: ./backend
     restart: always
@@ -11,6 +31,30 @@ services:
       "
     volumes:
       - .:/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`jsutcheckinghow.com`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
     profiles:
-      - test
-      - dev
+      - prod
+
+  reverse-proxy:
+    image: traefik:v2.10
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+    profiles:
+      - prod
