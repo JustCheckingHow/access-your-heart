@@ -20,7 +20,7 @@ def str_replacer(x, repls):
 additional_stopwords_list = []
 
 
-def create_course_indx(es: Elasticsearch, indx_name: str = COURSE_INDX):
+def create_courses_indx(es: Elasticsearch, indx_name: str = COURSE_INDX):
     """Create index"""
     dense_funds = {
         "settings": {
@@ -50,19 +50,24 @@ def create_course_indx(es: Elasticsearch, indx_name: str = COURSE_INDX):
         },
         "mappings": {
             "properties": {
-                "mainInstitutionName": {
+                "institution": {
                     "type": "keyword",
                 },
-                "mainInstitutionKind": {
+                "institutionKind": {
                     "type": "keyword",
                 },
-                "courseName": {"type": "text", "analyzer": "pl_analyzer"},
+                "course": {"type": "keyword"},
                 "leadingInstitutionCity": {
+                    "type": "keyword",
+                },
+                "city": {"type": "keyword"},
+                "name": {
                     "type": "keyword",
                 },
                 "tags": {
                     "type": "keyword",
                 },
+                "syllabus": {"type": "text", "analyzer": "pl_analyzer"},
             }
         },
     }
@@ -120,7 +125,9 @@ def upload_courses(es: Elasticsearch):
         for record in course_records:
             yield {"_index": COURSE_INDX, "_source": {**record}}
 
-    stream = stream_record(course_file="data/courses.json")
+    stream = stream_record(
+        course_file="/Users/jm/repos/acces-your-heart/data/full_join.json"
+    )
     for ok, response in streaming_bulk(es, actions=stream):
         if not ok:
             print(response)
@@ -157,5 +164,5 @@ def create_es_instance(
 if __name__ == "__main__":
     es = create_es_instance(host="206.189.56.21:9200")
 
-    create_syllabus_indx(es, SYLLABUS_INDX)
-    upload_syllabus(es)
+    create_courses_indx(es, SYLLABUS_INDX)
+    upload_courses(es)

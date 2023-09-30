@@ -5,6 +5,8 @@ from elasticsearch import Elasticsearch
 from app.models import FacetedQueryBody
 
 SYLLABUS_INDX = "syllabus"
+COURSE_INDX = "courses"
+INDEX = COURSE_INDX
 
 
 def create_es_instance(use_pass: bool = False) -> Elasticsearch:
@@ -29,7 +31,7 @@ def simple_query(es: Elasticsearch, query_input: str):
         "highlight": {"fields": {"syllabus": {}}},  # highlight here
     }
 
-    results = es.search(index=SYLLABUS_INDX, body=query)
+    results = es.search(index=INDEX, body=query)
     return results["hits"]["hits"]
 
 
@@ -43,5 +45,5 @@ def faceted_search(es: Elasticsearch, body: FacetedQueryBody):
         },
         "highlight": {"fields": {"syllabus": {}}},  # highlight here
     }
-    results = es.search(index=SYLLABUS_INDX, body=query)
+    results = es.search(index=INDEX, body=query)
     return results["hits"]["hits"]

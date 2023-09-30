@@ -1,3 +1,5 @@
+from itertools import groupby
+
 from fastapi import Body, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
@@ -6,10 +8,8 @@ from app.models import (
     CitiesResponse,
     City,
     FacetedQueryBody,
-    FreeSearchResponse,
     HobbiesResponse,
     Hobby,
-    KierunekResult,
     Profession,
     ProfessionForHobbiesBody,
     ProfessionsResponse,
@@ -86,14 +86,16 @@ async def main_search(input_query: QueryBody = Body(...)):
     res = []
     for sub_result in simple_query(es=es, query_input=input_query.query):
         res.append(
-            KierunekResult(
-                kierunek=sub_result["_source"]["kierunek"],
-                przedmiot=sub_result["_source"]["przedmiot"],
-                syllabus=sub_result["_source"]["syllabus"],
-                score=sub_result["_score"],
-            )
+            {
+                **sub_result["_source"],
+                "score": sub_result["_score"],
+            }
         )
-    return FreeSearchResponse(results=res)
+    # deduplicate results
+    final_results = []
+    for _, group in groupby(sorted(res, key=lambda x: x["name"]), lambda x: x["name"]):
+        final_results.append(list(group)[0])
+    return final_results
 
 
 @app.post("/facet-search")
@@ -102,11 +104,12 @@ async def facet_search(input_query: FacetedQueryBody = Body(...)):
     res = []
     for sub_result in faceted_search(es=es, body=input_query):
         res.append(
-            KierunekResult(
-                kierunek=sub_result["_source"]["kierunek"],
-                przedmiot=sub_result["_source"]["przedmiot"],
-                syllabus=sub_result["_source"]["syllabus"],
-                score=sub_result["_score"],
-            )
+            {
+                **sub_result["_source"],
+                "score": sub_result["_score"],
+            }
         )
-    return FreeSearchResponse(results=res)
+    final_results = []
+    for _, group in groupby(sorted(res, key=lambda x: x["name"]), lambda x: x["name"]):
+        final_results.append(list(group)[0])
+    return final_results
