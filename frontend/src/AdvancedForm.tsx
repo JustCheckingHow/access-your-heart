@@ -150,7 +150,9 @@ function AdvancedForm() {
 
   return (
     <div className="container mx-auto">
-      <Heading />
+      <div className="flex flex-col mt-14 mb-4 gap-4">
+        <Heading />
+      </div>
       {step >= Step.Skills && (
         <SkillsStep
           skillsOptions={skillsOptions}

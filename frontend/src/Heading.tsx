@@ -1,6 +1,9 @@
+import logo from "@/assets/logo.jpg";
+
 export function Heading() {
   return (
     <>
+      <img src={logo} width={134} height={134} style={{ margin: "auto" }} />
       <h3 className="scroll-m-20 text-4xl font-semibold tracking-tight text-center">
         Cześć,
       </h3>
