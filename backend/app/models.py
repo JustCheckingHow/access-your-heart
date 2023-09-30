@@ -23,3 +23,7 @@ class Hobby(BaseModel):
 
 class HobbiesResponse(BaseModel):
     hobbies: list[Hobby]
+
+
+class ProfessionForHobbiesBody(HobbiesResponse):
+    pass

@@ -1,10 +1,11 @@
-from fastapi import FastAPI
+from fastapi import Body, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from backend.app.models import (
     HobbiesResponse,
     Hobby,
     Profession,
+    ProfessionForHobbiesBody,
     ProfessionsResponse,
     Skill,
     SkillsResponse,
@@ -82,3 +83,11 @@ HOBBIES = [
 async def hobbies():
     """Return a list of hobbies."""
     return HobbiesResponse(hobbies=[Hobby(name=hobby) for hobby in HOBBIES])
+
+
+@app.post("/professions-for-hobbies")
+async def professions_for_hobbies(data: ProfessionForHobbiesBody = Body(...)):
+    """Return a list of professions for a given list of hobbies."""
+    return ProfessionsResponse(
+        professions=[Profession(name=profession) for profession in PROFESSIONS][:4]
+    )
