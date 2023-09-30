@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from backend.app.models import SkillResponse
+from backend.app.models import Skill, SkillsResponse
 
 app = FastAPI()
 
@@ -20,8 +20,10 @@ SKILLS = [
 @app.get("/skills")
 async def skills(skill_name: str = ""):
     """Return a list of skills."""
-    return [
-        SkillResponse(name=skill)
-        for skill in SKILLS
-        if skill.lower().startswith(skill_name.lower())
-    ]
+    return SkillsResponse(
+        skills=[
+            Skill(name=skill)
+            for skill in SKILLS
+            if skill.lower().startswith(skill_name.lower())
+        ]
+    )
