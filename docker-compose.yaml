@@ -30,6 +30,18 @@ services:
 
   # ============== [Prod] ==============
 
+  elastic-prod:
+    image: elastic-search-prod:latest
+    build: ./backend/db
+    restart: on-failure
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    profiles:
+      - prod
+    environment:
+      - discovery.type=single-node
+
   backend-prod:
     image: backend-search-prod:latest
     build: ./backend
