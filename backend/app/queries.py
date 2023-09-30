@@ -1,7 +1,8 @@
 import os
 
 from elasticsearch import Elasticsearch
-from models import FacetedQueryBody
+
+from app.models import FacetedQueryBody
 
 SYLLABUS_INDX = "syllabus"
 

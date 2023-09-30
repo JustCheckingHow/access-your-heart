@@ -41,7 +41,7 @@ class QueryBody(BaseModel):
     query: str
 
 
-class FacetedQueryBody(QueryBody):
+class FacetedQueryBody(BaseModel):
     skills: list[str]
     professions: list[str]
     hobbies: list[str]

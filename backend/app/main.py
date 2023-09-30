@@ -100,7 +100,7 @@ async def main_search(input_query: QueryBody = Body(...)):
 async def facet_search(input_query: FacetedQueryBody = Body(...)):
     """Return a list of courses for a given query."""
     res = []
-    for sub_result in faceted_search(es=es, query_input=input_query.query):
+    for sub_result in faceted_search(es=es, body=input_query):
         res.append(
             KierunekResult(
                 kierunek=sub_result["_source"]["kierunek"],
