@@ -170,7 +170,7 @@ function App() {
           do możliwych zawodów?
         </AlertTitle>
         <AlertDescription>
-          <div className="nline-flex items-baseline">
+          <div className="flex flex-wrap">
             {professionForHobbies.map((profession) => (
               <Badge variant="secondary" className="mx-1 my-1">
                 <button className="mx-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
@@ -182,6 +182,37 @@ function App() {
           </div>
         </AlertDescription>
       </Alert>
+      <div className="grid w-full max-w-md items-center gap-4 mt-6 mx-auto">
+        <Label className="text-md">
+          5. Ile czasu mozesz poswiecic na naukę?
+        </Label>
+        <div className="flex justify-between flex-wrap">
+          {[
+            "Nie mam ograniczneń",
+            "Wieczorowy",
+            "Weekendy",
+            "20h tygodniowo",
+            "10h co drugi tydzien",
+            "Bloker",
+          ].map((option) => (
+            <div className="flex items-center space-x-2 my-1" key={option}>
+              <Checkbox id="option" />
+              <label
+                htmlFor="terms"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                {option}
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="grid w-full max-w-md items-center gap-4 mt-6 mx-auto">
+        <Label className="text-md">
+          6. W których miastach możesz studiować?
+        </Label>
+        <FancyMultiSelect options={professionsOptions} />
+      </div>
     </div>
   );
 }

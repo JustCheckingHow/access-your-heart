@@ -15,14 +15,16 @@ services:
     profiles:
       - dev
     volumes:
-      - .:/app
+      - ./backend:/app
 
   frontend-dev:
     image: frontend-search-dev:latest
     build: ./frontend
     restart: on-failure
     ports:
-      - "127.0.0.1:80:80"
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ./frontend:/app
 
   # ============== [Prod] ==============
 
