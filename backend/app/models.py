@@ -35,3 +35,18 @@ class City(BaseModel):
 
 class CitiesResponse(BaseModel):
     cities: list[City]
+
+
+class QueryBody:
+    query: str
+
+
+class KierunekResult(BaseModel):
+    kierunek: str
+    przedmiot: str
+    link: str
+    score: float
+
+
+class FreeSearchResponse(BaseModel):
+    results: list[KierunekResult]

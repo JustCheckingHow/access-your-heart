@@ -32,6 +32,5 @@ RUN --mount=type=cache,target=/root/.cache \
 
 # Copy the project
 COPY . .
-
 # Set the user
 USER app

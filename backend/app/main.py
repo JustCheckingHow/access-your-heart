@@ -4,16 +4,22 @@ from starlette.middleware.cors import CORSMiddleware
 from backend.app.models import (
     CitiesResponse,
     City,
+    FreeSearchResponse,
     HobbiesResponse,
     Hobby,
+    KierunekResult,
     Profession,
     ProfessionForHobbiesBody,
     ProfessionsResponse,
+    QueryBody,
     Skill,
     SkillsResponse,
 )
+from backend.app.queries import create_es_instance, simple_query
 
 app = FastAPI()
+
+es = create_es_instance(use_pass=False)
 
 origins = ["*"]
 
@@ -105,3 +111,19 @@ async def cities():
             City(name="Los Angeles"),
         ]
     )
+
+
+@app.post("/search")
+async def main_search(input_query: QueryBody = Body(...)):
+    """Return a list of courses for a given query."""
+    res = []
+    for sub_result in simple_query(es=es, query_input=input_query.query):
+        res.append(
+            KierunekResult(
+                kierunek=sub_result["_source"]["kierunek"],
+                przedmiot=sub_result["_source"]["przedmiot"],
+                syllabus=sub_result["_source"]["syllabus"],
+                score=sub_result["_score"],
+            )
+        )
+    return FreeSearchResponse(res)
