@@ -23,29 +23,46 @@ services:
     restart: on-failure
     ports:
       - "127.0.0.1:5173:5173"
+    profiles:
+      - dev
     volumes:
       - ./frontend:/app
 
   # ============== [Prod] ==============
 
   backend-prod:
-    image: app-test-dev:latest
+    image: backend-search-prod:latest
     build: ./backend
     restart: on-failure
     expose:
       - "8080"
     command: >
       sh -c "
-        python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8080
+        python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
       "
     volumes:
       - .:/app
     environment:
-      - VIRTUAL_HOST=justcheckinghow.com
+      - VIRTUAL_HOST=api.justcheckinghow.com
       - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=justcheckinghow.com
+      - LETSENCRYPT_HOST=api.justcheckinghow.com
     profiles:
       - prod
+
+  frontend-prod:
+    image: frontend-search-prod:latest
+    build: ./frontend
+    restart: on-failure
+    expose:
+      - "5173"
+    command: "npm run dev"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - VIRTUAL_HOST=justcheckinghow.com
+      - VIRTUAL_PORT=5173
+      - LETSENCRYPT_HOST=justcheckinghow.com
+      - BACKEND_URL=https://api.justcheckinghow.com
 
   nginx-proxy:
     image: nginx
