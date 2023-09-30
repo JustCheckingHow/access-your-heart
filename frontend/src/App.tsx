@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FancyMultiSelect } from "./components/ui/multiselect";
+import { FancyMultiSelect, Option } from "./components/ui/multiselect";
 import { Label } from "./components/ui/label";
 
 interface SkillsResponse {
-  skills: { name: string }[];
+  skills: Option[];
+}
+
+interface ProfessionsResponse {
+  professions: Option[];
 }
 
 function App() {
   const [skillsOptions, setSkillsOptions] = useState<SkillsResponse["skills"]>(
     []
   );
+  const [professionsOptions, setProfessionsOptions] = useState<
+    ProfessionsResponse["professions"]
+  >([]);
   const getSkillsOptions = () => {
     axios
       .get<SkillsResponse>(`http://0.0.0.0:8080/skills`)
@@ -23,8 +30,21 @@ function App() {
       });
   };
 
+  const getProfessionsOptions = () => {
+    axios
+      .get<ProfessionsResponse>(`http://0.0.0.0:8080/professions`)
+      .then(({ data }) => {
+        console.log(data);
+        setProfessionsOptions(data.professions);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     getSkillsOptions();
+    getProfessionsOptions();
   }, []);
 
   return (
@@ -36,12 +56,16 @@ function App() {
         Zaplanuj z nami swoją karierę!
       </h4>
       <div className="grid w-full max-w-md items-center gap-4 my-6 mx-auto">
-        <div className="flex flex-col space-y-1.5">
-          <Label className="text-md">
-            1. Jakie umiejętności chcesz rozwijać?
-          </Label>
-          <FancyMultiSelect options={skillsOptions} />
-        </div>
+        <Label className="text-md">
+          1. Jakie umiejętności chcesz rozwijać?
+        </Label>
+        <FancyMultiSelect options={skillsOptions} />
+      </div>
+      <div className="grid w-full max-w-md items-center gap-4 my-6 mx-auto">
+        <Label className="text-md">
+          2. W jakim zawodzie się widzisz w przyszłości?
+        </Label>
+        <FancyMultiSelect options={professionsOptions} />
       </div>
     </div>
   );
