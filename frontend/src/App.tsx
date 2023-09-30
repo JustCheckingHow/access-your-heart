@@ -170,7 +170,7 @@ function App() {
           do możliwych zawodów?
         </AlertTitle>
         <AlertDescription>
-          <div className="nline-flex items-baseline">
+          <div className="flex flex-wrap">
             {professionForHobbies.map((profession) => (
               <Badge variant="secondary" className="mx-1 my-1">
                 <button className="mx-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
