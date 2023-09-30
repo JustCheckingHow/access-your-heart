@@ -1,7 +1,7 @@
 from fastapi import Body, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from backend.app.models import (
+from app.models import (
     CitiesResponse,
     City,
     FreeSearchResponse,
