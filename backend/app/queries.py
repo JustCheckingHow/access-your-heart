@@ -1,6 +1,7 @@
 import os
 
 from elasticsearch import Elasticsearch
+from models import FacetedQueryBody
 
 SYLLABUS_INDX = "syllabus"
 
@@ -27,5 +28,19 @@ def simple_query(es: Elasticsearch, query_input: str):
         "highlight": {"fields": {"syllabus": {}}},  # highlight here
     }
 
+    results = es.search(index=SYLLABUS_INDX, body=query)
+    return results["hits"]["hits"]
+
+
+def faceted_search(es: Elasticsearch, body: FacetedQueryBody):
+    query = {
+        "query": {
+            "query_string": {
+                "query": " OR ".join([f"({q})" for q in body.skills]),
+                "fields": ["syllabus"],
+            }
+        },
+        "highlight": {"fields": {"syllabus": {}}},  # highlight here
+    }
     results = es.search(index=SYLLABUS_INDX, body=query)
     return results["hits"]["hits"]

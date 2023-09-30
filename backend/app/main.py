@@ -5,6 +5,7 @@ from app.consts import HOBBIES, PROFESSIONS, SKILLS
 from app.models import (
     CitiesResponse,
     City,
+    FacetedQueryBody,
     FreeSearchResponse,
     HobbiesResponse,
     Hobby,
@@ -16,7 +17,7 @@ from app.models import (
     Skill,
     SkillsResponse,
 )
-from app.queries import create_es_instance, simple_query
+from app.queries import create_es_instance, faceted_search, simple_query
 
 app = FastAPI()
 
@@ -84,6 +85,22 @@ async def main_search(input_query: QueryBody = Body(...)):
     """Return a list of courses for a given query."""
     res = []
     for sub_result in simple_query(es=es, query_input=input_query.query):
+        res.append(
+            KierunekResult(
+                kierunek=sub_result["_source"]["kierunek"],
+                przedmiot=sub_result["_source"]["przedmiot"],
+                syllabus=sub_result["_source"]["syllabus"],
+                score=sub_result["_score"],
+            )
+        )
+    return FreeSearchResponse(results=res)
+
+
+@app.post("/facet-search")
+async def facet_search(input_query: FacetedQueryBody = Body(...)):
+    """Return a list of courses for a given query."""
+    res = []
+    for sub_result in faceted_search(es=es, query_input=input_query.query):
         res.append(
             KierunekResult(
                 kierunek=sub_result["_source"]["kierunek"],
