@@ -2,6 +2,8 @@ from fastapi import Body, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from backend.app.models import (
+    CitiesResponse,
+    City,
     HobbiesResponse,
     Hobby,
     Profession,
@@ -90,4 +92,16 @@ async def professions_for_hobbies(data: ProfessionForHobbiesBody = Body(...)):
     """Return a list of professions for a given list of hobbies."""
     return ProfessionsResponse(
         professions=[Profession(name=profession) for profession in PROFESSIONS]
+    )
+
+
+@app.get("/cities")
+async def cities():
+    """Return a list of cities."""
+    return CitiesResponse(
+        cities=[
+            City(name="San Francisco"),
+            City(name="New York"),
+            City(name="Los Angeles"),
+        ]
     )

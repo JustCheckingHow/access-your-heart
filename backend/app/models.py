@@ -27,3 +27,11 @@ class HobbiesResponse(BaseModel):
 
 class ProfessionForHobbiesBody(HobbiesResponse):
     pass
+
+
+class City(BaseModel):
+    name: str
+
+
+class CitiesResponse(BaseModel):
+    cities: list[City]
