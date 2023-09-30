@@ -1,38 +1,47 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import { Button } from "./components/ui/button";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { FancyMultiSelect } from "./components/ui/multiselect";
+import { Label } from "./components/ui/label";
+
+interface SkillsResponse {
+  skills: { name: string }[];
+}
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [skillsOptions, setSkillsOptions] = useState<SkillsResponse["skills"]>(
+    []
+  );
+  const getSkillsOptions = () => {
+    axios
+      .get<SkillsResponse>(`http://0.0.0.0:8080/skills`)
+      .then(({ data }) => {
+        console.log(data);
+        setSkillsOptions(data.skills);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getSkillsOptions();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="container mx-auto">
+      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
+        Cześć,
+      </h3>
+      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-center">
+        Zaplanuj z nami swoją karierę!
+      </h4>
+      <div className="grid w-full max-w-md items-center gap-4 my-4 mx-auto">
+        <div className="flex flex-col space-y-1.5">
+          <Label>1. Jakie umiejętności chcesz rozwijać?</Label>
+          <FancyMultiSelect options={skillsOptions} />
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <div>
-        <Button>Click me</Button>
-      </div>
-    </>
+    </div>
   );
 }
 
