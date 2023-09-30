@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { FancyMultiSelect, Option } from "./components/ui/multiselect";
 import { Label } from "./components/ui/label";
 import { Checkbox } from "./components/ui/checkbox";
 import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
-import { Info } from "lucide-react";
+import { Info, Plus } from "lucide-react";
+import { Badge } from "./components/ui/badge";
 
 interface SkillsResponse {
   skills: Option[];
@@ -69,6 +70,10 @@ function App() {
     getProfessionsOptions();
     getHobbiesOptions();
   }, []);
+  // TODO: remove this
+  useEffect(() => {
+    getProfessionForHobbies([]);
+  }, []);
 
   const [professionForHobbies, setProfessionForHobbies] = useState<Option[]>(
     []
@@ -85,9 +90,15 @@ function App() {
       .catch((error) => {
         console.log(error);
       })
-      .then(({ data }) => {
-        console.log(data);
-        setProfessionForHobbies(data.professions);
+      .then((response) => {
+        console.log({ hobbiesforprofession: response });
+        if (response && "data" in response) {
+          const { data } = response;
+          if (data && "professions" in (data as ProfessionsResponse)) {
+            const { professions } = data as ProfessionsResponse;
+            setProfessionForHobbies(professions);
+          }
+        }
       });
   };
 
@@ -154,12 +165,21 @@ function App() {
       </div>
       <Alert className="max-w-lg mx-auto mt-2">
         <Info className="h-4 w-4" />
-        <AlertTitle className="space-y-1">
+        <AlertTitle className="space-y-1 leading-6">
           Te zawody pasują do Twoich elementów wyszukiwania. Czy chcesz je dodać
           do możliwych zawodów?
         </AlertTitle>
         <AlertDescription>
-          You can add components to your app using the cli.
+          <div className="nline-flex items-baseline">
+            {professionForHobbies.map((profession) => (
+              <Badge variant="secondary" className="mx-1 my-1">
+                <button className="mx-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                  <Plus className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                </button>
+                {profession.name}
+              </Badge>
+            ))}
+          </div>
         </AlertDescription>
       </Alert>
     </div>
