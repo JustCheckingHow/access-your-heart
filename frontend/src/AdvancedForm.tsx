@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { Option } from "./components/ui/multiselect";
 import { SkillsStep } from "./SkillsStep";
@@ -9,120 +9,50 @@ import { ProfessionsForHobbies } from "./ProfessionsForHobbies";
 import { Heading } from "./Heading";
 import { TimeSpentStep } from "./TimeSpentStep";
 import { CitiesStep } from "./CitiesStep";
-
-interface SkillsResponse {
-  skills: Option[];
-}
-
-interface ProfessionsResponse {
-  professions: Option[];
-}
-
-interface HobbiesResponse {
-  hobbies: Option[];
-}
-
-interface CitiesResponse {
-  cities: Option[];
-}
-
-enum Step {
-  Skills = 1,
-  Profession = 2,
-  Hobby = 3,
-  Time = 4,
-  Location = 5,
-}
+import {
+  HobbiesResponse,
+  ProfessionsResponse,
+  Step,
+  useAdvancedFormData,
+  useAdvancedFormUserSelection,
+} from "./lib/utils";
 
 function AdvancedForm() {
-  const [skillsOptions, setSkillsOptions] = useState<SkillsResponse["skills"]>(
-    []
-  );
-  const [step, setStep] = useState<Step>(Step.Skills);
-  const [selectedSkills, setSelectedSkills] = useState<Option[]>([]);
-  const [selectedProfessions, setSelectedProfessions] = useState<Option[]>([]);
-  const [selectedTimeSpent, setSelectedTimeSpent] = useState<string[]>([]);
-  const [selectedHaveQualification, setSelectedHaveQualification] =
-    useState<boolean>(false);
+  const {
+    selectedSkills,
+    setSelectedSkills,
+    selectedProfessions,
+    setSelectedProfessions,
+    selectedTimeSpent,
+    setSelectedTimeSpent,
+    selectedHaveQualification,
+    setSelectedHaveQualification,
+    selectedProfessionsForHobbies,
+    setSelectedProfessionsForHobbies,
+    selectedCities,
+    setSelectedCities,
+  } = useAdvancedFormUserSelection();
 
-  const [selectedProfessionsForHobbies, setSelectedProfessionsForHobbies] =
-    useState<Option[]>([]);
-
-  const [selectedCities, setSelectedCities] = useState<Option[]>([]);
-
-  const [professionsOptions, setProfessionsOptions] = useState<
-    ProfessionsResponse["professions"]
-  >([]);
-
-  const [hobbies, setHobbies] = useState<HobbiesResponse["hobbies"]>([]);
-
-  const getSkillsOptions = () => {
-    axios
-      .get<SkillsResponse>(`${import.meta.env.VITE_BACKEND_URL}/skills`)
-      .then(({ data }) => {
-        console.log(data);
-        setSkillsOptions(data.skills);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const userData = {
+    skills: selectedSkills,
+    professions: selectedProfessions,
+    timeSpent: selectedTimeSpent,
+    haveQualification: selectedHaveQualification,
+    professionsForHobbies: selectedProfessionsForHobbies,
+    cities: selectedCities,
   };
-
-  const getProfessionsOptions = () => {
-    axios
-      .get<ProfessionsResponse>(
-        `${import.meta.env.VITE_BACKEND_URL}/professions`
-      )
-      .then(({ data }) => {
-        console.log(data);
-        setProfessionsOptions(data.professions);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getHobbiesOptions = () => {
-    axios
-      .get<HobbiesResponse>(`${import.meta.env.VITE_BACKEND_URL}/hobbies`)
-      .then(({ data }) => {
-        console.log(data);
-        setHobbies(data.hobbies);
-      })
-      .catch((error) => {
-        console.log(error);
-        setHobbies([]);
-      });
-  };
-  const [citiesOptions, setCitiesOptions] = useState<Option[]>([]);
-
-  const getCitiesOptions = () => {
-    axios
-      .get<CitiesResponse>(`${import.meta.env.VITE_BACKEND_URL}/cities`)
-      .then(({ data }) => {
-        console.log(data);
-        setCitiesOptions(data.cities);
-      })
-      .catch((error) => {
-        console.log(error);
-        setCitiesOptions([]);
-      });
-  };
-
-  useEffect(() => {
-    getSkillsOptions();
-    getProfessionsOptions();
-    getHobbiesOptions();
-    getCitiesOptions();
-  }, []);
-  // TODO: remove this
-  useEffect(() => {
-    getProfessionForHobbies([]);
-  }, []);
 
   const [professionForHobbies, setProfessionForHobbies] = useState<Option[]>(
     []
   );
+  const {
+    skillsOptions,
+    professionsOptions,
+    hobbies,
+    citiesOptions,
+    step,
+    setStep,
+  } = useAdvancedFormData();
 
   const getProfessionForHobbies = (hobbies: Option[]) => {
     axios
@@ -148,52 +78,77 @@ function AdvancedForm() {
       });
   };
 
+  async function handleSubmit() {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/search`,
+        userData
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="container mx-auto">
       <div className="flex flex-col mt-14 mb-4 gap-4">
         <Heading />
       </div>
-      {step >= Step.Skills && (
-        <SkillsStep
-          skillsOptions={skillsOptions}
-          onSelectedSkillsChange={setSelectedSkills}
-          onNext={() => setStep(Step.Profession)}
-        />
-      )}
-      {step >= Step.Profession && (
-        <ProfessionsStep
-          professionsOptions={professionsOptions}
-          onSelectedSkillsChange={setSelectedProfessions}
-          onNext={() => setStep(Step.Hobby)}
-        />
-      )}
-      {step >= Step.Hobby && (
-        <>
-          <HaveQualificationStep
-            onSelectedHaveQualification={setSelectedHaveQualification}
-          />
-          <HobbiesStep
-            hobbiesOptions={hobbies}
-            onSelectedHobbiesChange={getProfessionForHobbies}
-            onNext={() => setStep(Step.Time)}
-          />
-        </>
-      )}
-      {step >= Step.Time && (
-        <>
-          <ProfessionsForHobbies
-            professionsForHobbies={professionForHobbies}
-            onChangeProfessionsForHobbies={setSelectedProfessionsForHobbies}
-          />
+      <ol className="border-l-2 border-primary dark:border-primary-500">
+        {step >= Step.Skills && (
+          <li>
+            <SkillsStep
+              skillsOptions={skillsOptions}
+              onSelectedSkillsChange={setSelectedSkills}
+              onNext={() => setStep(Step.Profession)}
+            />
+          </li>
+        )}
+        {step >= Step.Profession && (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
+            <ProfessionsStep
+              professionsOptions={professionsOptions}
+              onSelectedSkillsChange={setSelectedProfessions}
+              onNext={() => setStep(Step.Hobby)}
+            />
+          </li>
+        )}
+        {step >= Step.Hobby && (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
+            <HaveQualificationStep
+              onSelectedHaveQualification={setSelectedHaveQualification}
+            />
+            <HobbiesStep
+              hobbiesOptions={hobbies}
+              onSelectedHobbiesChange={getProfessionForHobbies}
+              onNext={() => setStep(Step.Time)}
+            />
+          </li>
+        )}
+        {step >= Step.Time && (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
+            <ProfessionsForHobbies
+              professionsForHobbies={professionForHobbies}
+              onChangeProfessionsForHobbies={setSelectedProfessionsForHobbies}
+            />
 
-          <TimeSpentStep onSelectedTimeSpent={setSelectedTimeSpent} />
-          <CitiesStep
-            citiesOptions={citiesOptions}
-            onSelectedCitiesChange={setSelectedCities}
-            onNext={() => setStep(Step.Location)}
-          />
-        </>
-      )}
+            <TimeSpentStep onSelectedTimeSpent={setSelectedTimeSpent} />
+            <CitiesStep
+              citiesOptions={citiesOptions}
+              onSelectedCitiesChange={setSelectedCities}
+              onNext={() => {
+                setStep(Step.Location);
+                console.log(userData);
+                handleSubmit();
+              }}
+            />
+          </li>
+        )}
+      </ol>
     </div>
   );
 }
