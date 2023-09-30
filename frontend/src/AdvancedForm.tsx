@@ -23,6 +23,8 @@ function AdvancedForm() {
     setSelectedSkills,
     selectedProfessions,
     setSelectedProfessions,
+    selectedHobbies,
+    setSelectedHobbies,
     selectedTimeSpent,
     setSelectedTimeSpent,
     selectedHaveQualification,
@@ -34,12 +36,15 @@ function AdvancedForm() {
   } = useAdvancedFormUserSelection();
 
   const userData = {
-    skills: selectedSkills,
-    professions: selectedProfessions,
-    timeSpent: selectedTimeSpent,
-    haveQualification: selectedHaveQualification,
-    professionsForHobbies: selectedProfessionsForHobbies,
-    cities: selectedCities,
+    skills: selectedSkills.map((skill) => skill.name),
+    professions: selectedProfessions.map((profession) => profession.name),
+    hobbies: selectedHobbies.map((hobby) => hobby.name),
+    // timeSpent: selectedTimeSpent,
+    // haveQualification: selectedHaveQualification,
+    // professionsForHobbies: selectedProfessionsForHobbies.map(
+    //   (profession) => profession.name
+    // ),
+    cities: selectedCities.map((city) => city.name),
   };
 
   const [professionForHobbies, setProfessionForHobbies] = useState<Option[]>(
@@ -81,7 +86,7 @@ function AdvancedForm() {
   async function handleSubmit() {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/search`,
+        `${import.meta.env.VITE_BACKEND_URL}/facet-search`,
         userData
       );
       console.log(response);
@@ -123,7 +128,10 @@ function AdvancedForm() {
             />
             <HobbiesStep
               hobbiesOptions={hobbies}
-              onSelectedHobbiesChange={getProfessionForHobbies}
+              onSelectedHobbiesChange={(hobbies) => {
+                setSelectedHobbies(hobbies);
+                getProfessionForHobbies(hobbies);
+              }}
               onNext={() => setStep(Step.Time)}
             />
           </li>
@@ -135,7 +143,6 @@ function AdvancedForm() {
               professionsForHobbies={professionForHobbies}
               onChangeProfessionsForHobbies={setSelectedProfessionsForHobbies}
             />
-
             <TimeSpentStep onSelectedTimeSpent={setSelectedTimeSpent} />
             <CitiesStep
               citiesOptions={citiesOptions}
