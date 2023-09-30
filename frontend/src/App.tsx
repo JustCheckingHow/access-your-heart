@@ -29,15 +29,17 @@ function App() {
 
   return (
     <div className="container mx-auto">
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
+      <h3 className="scroll-m-20 text-4xl font-semibold tracking-tight text-center">
         Cześć,
       </h3>
-      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-center">
+      <h4 className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
         Zaplanuj z nami swoją karierę!
       </h4>
-      <div className="grid w-full max-w-md items-center gap-4 my-4 mx-auto">
+      <div className="grid w-full max-w-md items-center gap-4 my-6 mx-auto">
         <div className="flex flex-col space-y-1.5">
-          <Label>1. Jakie umiejętności chcesz rozwijać?</Label>
+          <Label className="text-md">
+            1. Jakie umiejętności chcesz rozwijać?
+          </Label>
           <FancyMultiSelect options={skillsOptions} />
         </div>
       </div>
