@@ -1,7 +1,14 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from backend.app.models import Skill, SkillsResponse
+from backend.app.models import (
+    HobbiesResponse,
+    Hobby,
+    Profession,
+    ProfessionsResponse,
+    Skill,
+    SkillsResponse,
+)
 
 app = FastAPI()
 
@@ -38,3 +45,40 @@ async def skills(skill_name: str = ""):
             if skill.lower().startswith(skill_name.lower())
         ]
     )
+
+
+PROFESSIONS = [
+    "Software Engineer",
+    "DevOps Engineer",
+    "Site Reliability Engineer",
+    "Data Engineer",
+    "Data Scientist",
+    "Machine Learning Engineer",
+    "Product Manager",
+]
+
+
+@app.get("/professions")
+async def professions():
+    """Return a list of professions."""
+    return ProfessionsResponse(
+        professions=[Profession(name=profession) for profession in PROFESSIONS]
+    )
+
+
+HOBBIES = [
+    "Biking",
+    "Hiking",
+    "Swimming",
+    "Running",
+    "Reading",
+    "Writing",
+    "Drawing",
+    "Painting",
+]
+
+
+@app.get("/hobbies")
+async def hobbies():
+    """Return a list of hobbies."""
+    return HobbiesResponse(hobbies=[Hobby(name=hobby) for hobby in HOBBIES])
