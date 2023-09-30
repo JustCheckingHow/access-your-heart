@@ -76,12 +76,4 @@ build-test-dev:
 		.
 .PHONY: build-test-dev
 
-bootstrap-test-dev:
-	docker compose \
-		--profile test \
-		--profile dev \
-		up \
-		--detach
-
-
 .DEFAULT_GOAL := init-test-dev # Set the default goal to init-dev-test
