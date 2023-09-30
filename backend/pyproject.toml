@@ -1,0 +1,78 @@
+[project]
+name = "access-your-heart"
+description = "Access Your Heart API"
+version = "0.1.0"
+authors = [
+]
+dependencies = [
+    "fastapi[all]",
+]
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+
+dev = [
+    "black",
+    "isort",
+    "ruff",
+    "pip-tools",
+    "pre-commit",
+]
+
+[tool.black]
+line-length = 88
+target_version = ['py311']
+include = '\.pyi?$'
+force-exclude = '''
+(
+  /(
+      \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.ruff_cache
+    | \.tox
+    | \.nox
+    | \.venv
+    | \.ipynb_checkpoints
+    | \.egg-info
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = 'py311'
+required-version = "0.0.277"
+extend-select = [
+    "UP", # pyupgrade
+    "B", # flake8-bugbear
+    "S", # flake8-bandit
+    "C", # flake8-comprehensions
+    "T", # flake8-debugger
+    "INP", # flake8-no-pep420
+    "ERA", # eradicate
+    "PD", # pandas-vet
+    "NPY", # numpy-specific rules
+    "Q", # flake8-quotes
+]
+src = [
+    "src",
+]
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
+
+[tool.setuptools]
+py-modules = ["app"]
