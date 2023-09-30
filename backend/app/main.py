@@ -1,6 +1,7 @@
 from fastapi import Body, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
+from app.consts import HOBBIES, PROFESSIONS, SKILLS
 from app.models import (
     CitiesResponse,
     City,
@@ -32,18 +33,6 @@ app.add_middleware(
 )
 
 
-SKILLS = [
-    "Python",
-    "Java",
-    "JavaScript",
-    "C++",
-    "Ruby",
-    "Rust",
-    "Go",
-    "Kotlin",
-]
-
-
 @app.get("/skills")
 async def skills(skill_name: str = ""):
     """Return a list of skills."""
@@ -56,35 +45,12 @@ async def skills(skill_name: str = ""):
     )
 
 
-PROFESSIONS = [
-    "Software Engineer",
-    "DevOps Engineer",
-    "Site Reliability Engineer",
-    "Data Engineer",
-    "Data Scientist",
-    "Machine Learning Engineer",
-    "Product Manager",
-]
-
-
 @app.get("/professions")
 async def professions():
     """Return a list of professions."""
     return ProfessionsResponse(
         professions=[Profession(name=profession) for profession in PROFESSIONS]
     )
-
-
-HOBBIES = [
-    "Biking",
-    "Hiking",
-    "Swimming",
-    "Running",
-    "Reading",
-    "Writing",
-    "Drawing",
-    "Painting",
-]
 
 
 @app.get("/hobbies")
