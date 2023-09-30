@@ -15,7 +15,7 @@ def create_es_instance(use_pass: bool = False) -> Elasticsearch:
         addr = os.environ.get("ADDR")
         es = Elasticsearch(hosts=[f"http://{user}:{password}@{addr}:9200"])
     else:
-        es = Elasticsearch(hosts=["http://localhost:9200"])
+        es = Elasticsearch(hosts=["http://206.189.56.21:9200"])
     return es
 
 
