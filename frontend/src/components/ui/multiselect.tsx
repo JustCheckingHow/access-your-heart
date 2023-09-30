@@ -12,39 +12,42 @@ export interface Option {
 }
 export interface FancyMultiSelectProps {
   options: Option[];
+  onSelectionChange?: (options: Option[]) => void;
 }
 
-export function FancyMultiSelect({ options }: FancyMultiSelectProps) {
+export function FancyMultiSelect({
+  options,
+  onSelectionChange,
+}: FancyMultiSelectProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState<Option[]>([]);
   const [inputValue, setInputValue] = React.useState("");
 
-  const handleUnselect = React.useCallback((option: Option) => {
+  const handleUnselect = (option: Option) => {
+    onSelectionChange?.(selected.filter((s) => s.name !== option.name));
     setSelected((prev) => prev.filter((s) => s.name !== option.name));
-  }, []);
+  };
 
-  const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      const input = inputRef.current;
-      if (input) {
-        if (e.key === "Delete" || e.key === "Backspace") {
-          if (input.value === "") {
-            setSelected((prev) => {
-              const newSelected = [...prev];
-              newSelected.pop();
-              return newSelected;
-            });
-          }
-        }
-        // This is not a default behaviour of the <input /> field
-        if (e.key === "Escape") {
-          input.blur();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const input = inputRef.current;
+    if (input) {
+      if (e.key === "Delete" || e.key === "Backspace") {
+        if (input.value === "") {
+          setSelected((prev) => {
+            const newSelected = [...prev];
+            newSelected.pop();
+            onSelectionChange?.(newSelected);
+            return newSelected;
+          });
         }
       }
-    },
-    []
-  );
+      // This is not a default behaviour of the <input /> field
+      if (e.key === "Escape") {
+        input.blur();
+      }
+    }
+  };
 
   const selectables = options.filter((option) => !selected.includes(option));
 
@@ -104,6 +107,7 @@ export function FancyMultiSelect({ options }: FancyMultiSelectProps) {
                     onSelect={() => {
                       setInputValue("");
                       setSelected((prev) => [...prev, option]);
+                      onSelectionChange?.([...selected, option]);
                     }}
                     className={"cursor-pointer"}
                   >

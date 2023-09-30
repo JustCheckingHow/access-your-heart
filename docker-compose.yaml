@@ -27,6 +27,7 @@ services:
       - dev
     volumes:
       - ./frontend:/app
+      - .env:/app/.env
 
   # ============== [Prod] ==============
 
