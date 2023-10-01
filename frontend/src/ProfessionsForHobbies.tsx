@@ -37,9 +37,9 @@ export function ProfessionsForHobbies({
       </AlertTitle>
       <AlertDescription>
         <div className="flex flex-wrap max-w-lg">
-          {professionsForHobbies.map((profession) => (
+          {professionsForHobbies.map((profession, index) => (
             <ProfessionsForHobbiesButton
-              key={profession.name}
+              key={`${profession.name}-${index}`}
               profession={profession}
               onAddProfession={onAddProfession}
               onRemoveProfession={onRemoveProfession}

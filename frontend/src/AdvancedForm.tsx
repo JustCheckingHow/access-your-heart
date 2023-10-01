@@ -37,7 +37,7 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
     setSelectedTimeSpent,
     // selectedHaveQualification,
     setSelectedHaveQualification,
-    // selectedProfessionsForHobbies,
+    selectedProfessionsForHobbies,
     setSelectedProfessionsForHobbies,
     selectedCities,
     setSelectedCities,
@@ -185,10 +185,12 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
         {step >= Step.Time ? (
           <li>
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
-            <ProfessionsForHobbies
-              professionsForHobbies={professionForHobbies}
-              onChangeProfessionsForHobbies={setSelectedProfessionsForHobbies}
-            />
+            {selectedProfessionsForHobbies.length > 0 && (
+              <ProfessionsForHobbies
+                professionsForHobbies={professionForHobbies}
+                onChangeProfessionsForHobbies={setSelectedProfessionsForHobbies}
+              />
+            )}
             <TimeSpentStep onSelectedTimeSpent={setSelectedTimeSpent} />
             <CitiesStep
               citiesOptions={citiesOptions}
