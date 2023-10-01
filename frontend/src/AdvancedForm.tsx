@@ -10,7 +10,6 @@ import { Heading } from "./Heading";
 import { TimeSpentStep } from "./TimeSpentStep";
 import { CitiesStep } from "./CitiesStep";
 import {
-  HobbiesResponse,
   ProfessionsResponse,
   Step,
   useAdvancedFormData,
@@ -37,7 +36,7 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
     setSelectedTimeSpent,
     // selectedHaveQualification,
     setSelectedHaveQualification,
-    selectedProfessionsForHobbies,
+    // selectedProfessionsForHobbies,
     setSelectedProfessionsForHobbies,
     selectedCities,
     setSelectedCities,
@@ -69,7 +68,7 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
 
   const getProfessionForHobbies = (hobbies: Option[]) => {
     axios
-      .post<HobbiesResponse, ProfessionsResponse>(
+      .post<ProfessionsResponse>(
         `${import.meta.env.VITE_BACKEND_URL}/professions-for-hobbies`,
         {
           hobbies: hobbies,
@@ -86,7 +85,9 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
         console.log(error);
         setProfessionForHobbies([]);
       })
-      .then(({ data }) => {
+      .then((response) => {
+        if (!response) return;
+        const { data } = response;
         console.log("ProfessionsForHobbies", data);
         setProfessionForHobbies(data.professions);
       });
