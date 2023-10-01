@@ -20,7 +20,7 @@ export function CitiesStep({
     setcanGoNext(options.length > 0);
   };
   return (
-    <div className="grid w-full max-w-xl items-center gap-4 mt-6 mx-auto">
+    <div className="grid w-full max-w-xl items-center gap-4 mt-6 mb-16 mx-auto">
       <Label className="text-md">6. W których miastach możesz studiować?</Label>
       <div className="flex w-full max-w-lg items-center space-x-4">
         <FancyMultiSelect
