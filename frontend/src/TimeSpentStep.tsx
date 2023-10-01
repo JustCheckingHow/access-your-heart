@@ -60,6 +60,16 @@ export function TimeSpentStep({ onSelectedTimeSpent }: TimeSpentStepProps) {
                   onUncheckOption({ name, label });
                 }
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (e.currentTarget.value === "true") {
+                    onCheckOption({ name, label });
+                  }
+                  if (e.currentTarget.value === "false") {
+                    onUncheckOption({ name, label });
+                  }
+                }
+              }}
             />
             <label
               htmlFor="terms"
