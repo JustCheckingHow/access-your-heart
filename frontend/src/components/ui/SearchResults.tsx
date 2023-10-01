@@ -9,45 +9,78 @@ import {
   CardFooter,
 } from "./card";
 
-export interface SearchResultsProps {
-  results:
-    | {
-        kierunek: string;
-        przedmiot: string;
-        score: string;
-        syllabus: string;
-      }[];
-}
+/*
+city: "Lublin"
+​​​
+course: "matematyka"
+​​​
+experience: "ogółem"
+​​​
+faculty: ""
+​​​
+graduatesNumber: 18
+​​​
+graduationYear: 2021
+​​​
+institution: "politechnika lubelska"
+​​​
+institutionKind: "Uczelnia publiczna"
+​​​
+name: "Matematyka"
+​​​​​
+*/
 
 interface SearchResult {
-  kierunek: string;
+  city: string;
+  name: string;
+  course: string;
+  graduatesNumber: string;
+  graduationYear: string;
   przedmiot: string;
+  institution: string;
   score: string;
-  syllabus: string;
+  timeOfLookingForJob: string;
+  totalSalary: string;
+  unemployedRisk: string;
+  voivodeship: string;
+}
+export interface SearchResultsProps {
+  results: SearchResult[];
 }
 
 const SearchWidget = ({
-  kierunek,
+  city,
+  name,
+  course,
+  graduatesNumber,
+  graduationYear,
   przedmiot,
   score,
-  syllabus,
+  timeOfLookingForJob,
+  totalSalary,
+  unemployedRisk,
+  voivodeship,
+  institution,
 }: SearchResult) => {
-  const unemployment = "1.5%";
-  const timeToFindFirstJob = "2 miesiące";
-  const numberOfGraduates = "12345";
-  const numberOfPlaces = "12";
-  const salary = "15 250 zł";
   return (
     <Card className="w-full my-6">
       <CardHeader>
         <div className="flex flex-row items-center justify-between space-y-0 pb-2">
           <div className="flex flex-col space-y-1.5">
-            <CardTitle>{kierunek}</CardTitle>
-            <CardDescription>Uniwersytet Jagielloński</CardDescription>
+            <CardTitle>{name}</CardTitle>
+            <CardDescription>{institution}</CardDescription>
           </div>
-          <Button>
-            <Link className="mr-2 h-4 w-4" /> Strona kierunku
-          </Button>
+          <div className="flex flex-row items-center justify-between space-y-1.5">
+            <div className="mx-4">
+              Total salary:
+              <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+                {totalSalary}
+              </h2>
+            </div>
+            <Button>
+              <Link className="mr-2 h-4 w-4" /> Strona kierunku
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -71,7 +104,7 @@ const SearchWidget = ({
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{unemployment}</div>
+              <div className="text-2xl font-bold">{unemployedRisk}</div>
             </CardContent>
           </Card>
           <Card>
@@ -95,7 +128,7 @@ const SearchWidget = ({
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{timeToFindFirstJob}</div>
+              <div className="text-2xl font-bold">{timeOfLookingForJob}</div>
             </CardContent>
           </Card>
           <Card>
@@ -119,7 +152,7 @@ const SearchWidget = ({
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{numberOfGraduates}</div>
+              <div className="text-2xl font-bold">{graduatesNumber}</div>
             </CardContent>
           </Card>
           <Card>
@@ -141,7 +174,9 @@ const SearchWidget = ({
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{numberOfPlaces}</div>
+              <div className="text-2xl font-bold">
+                {Number(score).toFixed(2)}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -149,7 +184,7 @@ const SearchWidget = ({
       <CardFooter className="flex justify-between">
         <div className="flex flex-col space-y-1.5">
           <CardTitle className="text-sm font-medium">Słowa pasujące</CardTitle>
-          <CardDescription>{syllabus}</CardDescription>
+          <CardDescription>{}</CardDescription>
         </div>
       </CardFooter>
     </Card>
