@@ -86,15 +86,9 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
         console.log(error);
         setProfessionForHobbies([]);
       })
-      .then((response) => {
-        console.log({ hobbiesforprofession: response });
-        if (response && "data" in response) {
-          const { data } = response;
-          if (data && "professions" in (data as ProfessionsResponse)) {
-            const { professions } = data as ProfessionsResponse;
-            setProfessionForHobbies(professions);
-          }
-        }
+      .then(({ data }) => {
+        console.log("ProfessionsForHobbies", data);
+        setProfessionForHobbies(data.professions);
       });
   };
 
@@ -185,7 +179,7 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
         {step >= Step.Time ? (
           <li>
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
-            {selectedProfessionsForHobbies.length > 0 && (
+            {professionForHobbies.length > 0 && (
               <ProfessionsForHobbies
                 professionsForHobbies={professionForHobbies}
                 onChangeProfessionsForHobbies={setSelectedProfessionsForHobbies}
