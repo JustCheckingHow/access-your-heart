@@ -43,8 +43,6 @@ services:
       - prod
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
-    networks:
-      - shared_network
     env_file:
       - .env
     environment:
@@ -60,8 +58,6 @@ services:
       sh -c "
         python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
       "
-    networks:
-      - shared_network
     env_file:
       - .env
     environment:
@@ -78,8 +74,6 @@ services:
     expose:
       - "5173"
     command: "npm run dev"
-    networks:
-      - shared_network
     env_file:
       - .env
     environment:
@@ -105,8 +99,6 @@ services:
     restart: always
     profiles:
       - prod
-    networks:
-      - shared_network
 
   docker-gen:
     image: nginxproxy/docker-gen
@@ -122,8 +114,6 @@ services:
     restart: always
     profiles:
       - prod
-    networks:
-      - shared_network
 
   acme-companion:
     image: nginxproxy/acme-companion
@@ -143,8 +133,6 @@ services:
     restart: always
     profiles:
       - prod
-    networks:
-      - shared_network
 
 volumes:
   elasticsearch_data:
@@ -154,7 +142,3 @@ volumes:
   html:
   certs:
   acme:
-
-networks:
-  shared_network:
-    external: true
