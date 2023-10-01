@@ -91,6 +91,7 @@ async def main_search(input_query: QueryBody = Body(...)):
             {
                 **sub_result["_source"],
                 "score": sub_result["_score"],
+                "highlighted": sub_result["highlight"]["syllabus"][0],
             }
         )
     # deduplicate results
@@ -109,6 +110,7 @@ async def facet_search(input_query: FacetedQueryBody = Body(...)):
             {
                 **sub_result["_source"],
                 "score": sub_result["_score"],
+                "highlighted": sub_result["highlight"]["syllabus"][0],
             }
         )
     final_results = []
