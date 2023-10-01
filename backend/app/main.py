@@ -7,7 +7,7 @@ from fastapi import Body, FastAPI
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 
-from app.consts import CITIES, HOBBIES, PROFESSIONS, SKILLS
+from app.consts import CITIES, HOBBIES, HOBBIES_TO_PROFESSIONS, PROFESSIONS, SKILLS
 from app.models import (
     CitiesResponse,
     City,
@@ -66,14 +66,13 @@ async def hobbies() -> HobbiesResponse:
 @app.post("/professions-for-hobbies")
 async def professions_for_hobbies(data: ProfessionForHobbiesBody = Body(...)):
     """Return a list of professions for a given list of hobbies."""
+    print(data)
+    all_professions = []
+    for hobby in data.hobbies:
+        all_professions.extend(HOBBIES_TO_PROFESSIONS[hobby.name])
+
     return ProfessionsResponse(
-        professions=list(
-            itertools.chain.from_iterable(
-                [PROFESSIONS[hobby] for hobby in data.hobbies]
-                for hobby in data.hobbies
-                if hobby in PROFESSIONS
-            )
-        )
+        professions=[Profession(name=profession) for profession in all_professions]
     )
 
 
