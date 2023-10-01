@@ -16,6 +16,7 @@ services:
       - dev
     volumes:
       - ./backend:/app
+      - .env:/app/.env
 
   frontend-dev:
     image: frontend-search-dev:latest

@@ -16,6 +16,7 @@ import {
   useAdvancedFormData,
   useAdvancedFormUserSelection,
 } from "./lib/utils";
+import { Chat } from "./Chat";
 
 function AdvancedForm() {
   const {
@@ -96,7 +97,7 @@ function AdvancedForm() {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto h-screen overflow-y-auto">
       <div className="flex flex-col mt-14 mb-4 gap-4">
         <Heading />
       </div>
@@ -123,6 +124,7 @@ function AdvancedForm() {
               onSelectedSkillsChange={setSelectedProfessions}
               onNext={() => setStep(Step.Hobby)}
             />
+            <Chat />
           </li>
         ) : (
           <li>

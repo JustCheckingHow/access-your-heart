@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SearchResults from "@/components/ui/SearchResults";
 
-import logo from "@/assets/logo.jpg";
 import { Heading } from "@/Heading";
 
 interface SearchPageProps {

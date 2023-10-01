@@ -1,6 +1,9 @@
 from itertools import groupby
+from typing import Literal
 
+import openai
 from fastapi import Body, FastAPI
+from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 
 from app.consts import HOBBIES, PROFESSIONS, SKILLS
@@ -113,3 +116,39 @@ async def facet_search(input_query: FacetedQueryBody = Body(...)):
     for _, group in groupby(sorted(res, key=lambda x: x["name"]), lambda x: x["name"]):
         final_results.append(list(group)[0])
     return {"results": final_results}
+
+
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    body: str
+
+
+class ChatHistory(BaseModel):
+    history: list[ChatMessage]
+
+
+@app.post("/chat")
+async def chat(body: ChatHistory = Body(...)):
+    """Return a list of courses for a given query."""
+    PROMPT = """
+    Jesteś pomicnym asystentem wspomamagającym wybór kierunku studiów.
+    Musisz wspomoc użytkownika w wyborze kierunku studiów oraz w zrozumieniu dlaczego wybrany kierunek jest najlepszy.
+
+    MUSISZ się dowiiedzieć:
+    - jakie ma zainteresowania
+    - jakie ma umiejętności
+    - jakie ma doświadczenie
+    - jakie ma hobby
+    - jakie ma preferencje co do miasta
+    - jakie ma preferencje co do zarobków
+    - jakie ma preferencje co do czasu pracy
+    - jakie ma preferencje co do czasu wolnego
+
+    Na podstawie tych informacji musisz zasuugerować mu w jakim kierunku powinien się rozwijać.
+    """
+    messages = [
+        {"role": "system", "content": PROMPT},
+        *({"role": message.role, "content": message.body} for message in body.history),
+    ]
+    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+    return ChatMessage(role="assistant", body=completion.choices[0].message.content)

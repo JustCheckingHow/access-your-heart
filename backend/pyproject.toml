@@ -6,7 +6,8 @@ authors = [
 ]
 dependencies = [
     "fastapi[all]",
-    "elasticsearch==7.17.9"
+    "elasticsearch==7.17.9",
+    "openai",
 ]
 requires-python = ">=3.11"
 
