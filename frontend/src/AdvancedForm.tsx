@@ -101,7 +101,7 @@ function AdvancedForm() {
         <Heading />
       </div>
       <ol className="border-l-2 border-primary dark:border-primary-500">
-        {step >= Step.Skills && (
+        {step >= Step.Skills ? (
           <li>
             <SkillsStep
               skillsOptions={skillsOptions}
@@ -109,8 +109,13 @@ function AdvancedForm() {
               onNext={() => setStep(Step.Profession)}
             />
           </li>
+        ) : (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="w-full h-4"></div>
+          </li>
         )}
-        {step >= Step.Profession && (
+        {step >= Step.Profession ? (
           <li>
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
             <ProfessionsStep
@@ -119,8 +124,13 @@ function AdvancedForm() {
               onNext={() => setStep(Step.Hobby)}
             />
           </li>
+        ) : (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="w-full h-4"></div>
+          </li>
         )}
-        {step >= Step.Hobby && (
+        {step >= Step.Hobby ? (
           <li>
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
             <HaveQualificationStep
@@ -135,8 +145,13 @@ function AdvancedForm() {
               onNext={() => setStep(Step.Time)}
             />
           </li>
+        ) : (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="w-full h-4"></div>
+          </li>
         )}
-        {step >= Step.Time && (
+        {step >= Step.Time ? (
           <li>
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
             <ProfessionsForHobbies
@@ -153,6 +168,11 @@ function AdvancedForm() {
                 handleSubmit();
               }}
             />
+          </li>
+        ) : (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="w-full h-4"></div>
           </li>
         )}
       </ol>

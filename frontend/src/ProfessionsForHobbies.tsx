@@ -39,6 +39,7 @@ export function ProfessionsForHobbies({
         <div className="flex flex-wrap max-w-lg">
           {professionsForHobbies.map((profession) => (
             <ProfessionsForHobbiesButton
+              key={profession.name}
               profession={profession}
               onAddProfession={onAddProfession}
               onRemoveProfession={onRemoveProfession}
