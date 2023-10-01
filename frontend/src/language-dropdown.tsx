@@ -1,5 +1,3 @@
-import * as React from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import polandSvg from "@/assets/flag-for-poland-svgrepo-com.svg";
 import ukSvg from "@/assets/england-svgrepo-com.svg";
 

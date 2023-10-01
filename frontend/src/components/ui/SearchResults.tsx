@@ -43,6 +43,7 @@ interface SearchResult {
   totalSalary: string;
   unemployedRisk: string;
   voivodeship: string;
+  highlighted: string;
 }
 export interface SearchResultsProps {
   results: SearchResult[];
@@ -61,6 +62,7 @@ const SearchWidget = ({
   unemployedRisk,
   voivodeship,
   institution,
+  highlighted,
 }: SearchResult) => {
   return (
     <Card className="w-full my-6">
@@ -184,7 +186,9 @@ const SearchWidget = ({
       <CardFooter className="flex justify-between">
         <div className="flex flex-col space-y-1.5">
           <CardTitle className="text-sm font-medium">Słowa pasujące</CardTitle>
-          <CardDescription>{}</CardDescription>
+          <CardDescription>
+            <div dangerouslySetInnerHTML={{ __html: highlighted }}></div>
+          </CardDescription>
         </div>
       </CardFooter>
     </Card>
@@ -195,7 +199,7 @@ const SearchResults = ({ results }: SearchResultsProps) => {
   console.log(results);
 
   return (
-    <div>
+    <div className="h-screen">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
         Wyniki wyszukiwania
       </h1>
