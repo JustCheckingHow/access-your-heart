@@ -52,24 +52,24 @@ async def skills(skill_name: str = ""):
 @app.get("/professions")
 async def professions() -> ProfessionsResponse:
     """Return a list of professions."""
+
     return ProfessionsResponse(
-        professions=list({Profession(name=profession) for profession in PROFESSIONS})
+        professions=[Profession(name=profession) for profession in set(PROFESSIONS)]
     )
 
 
 @app.get("/hobbies")
 async def hobbies() -> HobbiesResponse:
     """Return a list of hobbies."""
-    return HobbiesResponse(hobbies=list({Hobby(name=hobby) for hobby in HOBBIES}))
+    return HobbiesResponse(hobbies=[Hobby(name=hobby) for hobby in set(HOBBIES)])
 
 
 @app.post("/professions-for-hobbies")
 async def professions_for_hobbies(data: ProfessionForHobbiesBody = Body(...)):
     """Return a list of professions for a given list of hobbies."""
-    print(data)
-    all_professions = []
+    all_professions = set()
     for hobby in data.hobbies:
-        all_professions.extend(HOBBIES_TO_PROFESSIONS[hobby.name])
+        all_professions.update(HOBBIES_TO_PROFESSIONS[hobby])
 
     return ProfessionsResponse(
         professions=[Profession(name=profession) for profession in all_professions]
