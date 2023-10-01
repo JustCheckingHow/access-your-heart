@@ -33,11 +33,11 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
     setSelectedProfessions,
     selectedHobbies,
     setSelectedHobbies,
-    selectedTimeSpent,
+    // selectedTimeSpent,
     setSelectedTimeSpent,
-    selectedHaveQualification,
+    // selectedHaveQualification,
     setSelectedHaveQualification,
-    selectedProfessionsForHobbies,
+    // selectedProfessionsForHobbies,
     setSelectedProfessionsForHobbies,
     selectedCities,
     setSelectedCities,
@@ -146,14 +146,6 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
               onSelectedSkillsChange={setSelectedProfessions}
               onNext={() => setStep(Step.Hobby)}
             />
-            <Alert className="mx-auto max-w-xl bg-blue-100 text-blue-500 rounded-lg">
-              <Bot className="h-4 w-4" />
-              <AlertTitle>Szukasz pomocy?</AlertTitle>
-              <AlertDescription>
-                Możesz zapytać mnie o to, co Cię interesuje.
-              </AlertDescription>
-            </Alert>
-            <Chat />
           </li>
         ) : (
           <li>
@@ -163,6 +155,14 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
         )}
         {step >= Step.Hobby ? (
           <li>
+            <Alert className="mx-auto max-w-xl bg-blue-100 text-blue-500 rounded-lg">
+              <Bot className="h-4 w-4" />
+              <AlertTitle>Szukasz pomocy?</AlertTitle>
+              <AlertDescription>
+                Możesz zapytać mnie o to, co Cię interesuje.
+              </AlertDescription>
+            </Alert>
+            <Chat userData={userData} />
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
             <HaveQualificationStep
               onSelectedHaveQualification={setSelectedHaveQualification}

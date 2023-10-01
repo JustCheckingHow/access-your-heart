@@ -9,27 +9,6 @@ import {
   CardFooter,
 } from "./card";
 
-/*
-city: "Lublin"
-​​​
-course: "matematyka"
-​​​
-experience: "ogółem"
-​​​
-faculty: ""
-​​​
-graduatesNumber: 18
-​​​
-graduationYear: 2021
-​​​
-institution: "politechnika lubelska"
-​​​
-institutionKind: "Uczelnia publiczna"
-​​​
-name: "Matematyka"
-​​​​​
-*/
-
 interface SearchResult {
   city: string;
   name: string;
@@ -186,9 +165,7 @@ const SearchWidget = ({
       <CardFooter className="flex justify-between">
         <div className="flex flex-col space-y-1.5">
           <CardTitle className="text-sm font-medium">Słowa pasujące</CardTitle>
-          <CardDescription>
-            <div dangerouslySetInnerHTML={{ __html: highlighted }}></div>
-          </CardDescription>
+          <CardDescription dangerouslySetInnerHTML={{ __html: highlighted }} />
         </div>
       </CardFooter>
     </Card>
@@ -199,12 +176,15 @@ const SearchResults = ({ results }: SearchResultsProps) => {
   console.log(results);
 
   return (
-    <div className="h-screen">
+    <div className="h-screen mt-16">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
         Wyniki wyszukiwania
       </h1>
       {results.map((result) => (
-        <SearchWidget {...result} />
+        <SearchWidget
+          {...result}
+          key={`${result.city}-${result.name}-${result.course}`}
+        />
       ))}
     </div>
   );

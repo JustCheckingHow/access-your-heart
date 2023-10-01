@@ -118,28 +118,39 @@ class ChatMessage(BaseModel):
     body: str
 
 
+class ChatUserData(BaseModel):
+    skills: list[str]
+    professions: list[str]
+
+
 class ChatHistory(BaseModel):
     history: list[ChatMessage]
+    user_data: ChatUserData
 
 
 @app.post("/chat")
 async def chat(body: ChatHistory = Body(...)):
     """Return a list of courses for a given query."""
-    PROMPT = """
+    PROMPT = f"""
     Jesteś pomicnym asystentem wspomamagającym wybór kierunku studiów.
     Musisz wspomoc użytkownika w wyborze kierunku studiów oraz w zrozumieniu dlaczego wybrany kierunek jest najlepszy.
 
+    Użytkownik zaznaczył, że ma następujące umiejętności: {', '.join(body.user_data.skills)}
+    Użytkownik zaznaczył, że ma następujące zainteresowania zawodowe: {', '.join(body.user_data.professions)}
+
     MUSISZ się dowiiedzieć:
+    - jakie ma doświadczenie
+    - czego oczekuje od studiów
     - jakie ma zainteresowania
     - jakie ma umiejętności
-    - jakie ma doświadczenie
-    - jakie ma hobby
-    - jakie ma preferencje co do miasta
-    - jakie ma preferencje co do zarobków
-    - jakie ma preferencje co do czasu pracy
-    - jakie ma preferencje co do czasu wolnego
+    - czym chciałby się zajmować w przyszłości
 
-    Na podstawie tych informacji musisz zasuugerować mu w jakim kierunku powinien się rozwijać.
+    Jeżeli uważasz, że umiętności lub zainteresowania użytkownika nie odpowiadają podanym przez niego
+    zainteresowaniom zawodowym, możesz zaproponować mu inne zainteresowania zawodowe.
+
+    Na podstawie tych informacji musisz zasugerować mu w jakim kierunku powinien się rozwijać.
+    Zacznij rozmowę od propozycji wsparcia użytkownika w wyborze kierunku studiów. Bądż uprzejmy i pomocny.
+    Wypowiadaj się w sposób krótki i zwięzły
     """
     messages = [
         {"role": "system", "content": PROMPT},
