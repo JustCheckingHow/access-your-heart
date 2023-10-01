@@ -187,6 +187,7 @@ function AdvancedForm() {
           </li>
         )}
       </ol>
+      <div className="flex flex-col h-64 mt-14 mb-4 gap-4" />
     </div>
   );
 }
