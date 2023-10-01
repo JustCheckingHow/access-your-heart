@@ -69,7 +69,7 @@ async def professions_for_hobbies(data: ProfessionForHobbiesBody = Body(...)):
     """Return a list of professions for a given list of hobbies."""
     all_professions = set()
     for hobby in data.hobbies:
-        all_professions.update(HOBBIES_TO_PROFESSIONS[hobby.name])
+        all_professions.update(HOBBIES_TO_PROFESSIONS.get(hobby.name, set()))
 
     return ProfessionsResponse(
         professions=[Profession(name=profession) for profession in all_professions]
