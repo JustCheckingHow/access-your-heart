@@ -66,7 +66,13 @@ async def hobbies():
 async def professions_for_hobbies(data: ProfessionForHobbiesBody = Body(...)):
     """Return a list of professions for a given list of hobbies."""
     return ProfessionsResponse(
-        professions=[Profession(name=profession) for profession in PROFESSIONS]
+        professions=list(
+            itertools.chain.from_iterable(
+                [PROFESSIONS[hobby] for hobby in data.hobbies]
+                for hobby in data.hobbies
+                if hobby in PROFESSIONS
+            )
+        )
     )
 
 
@@ -79,37 +85,40 @@ async def cities():
 @app.post("/search")
 async def main_search(input_query: QueryBody = Body(...)):
     """Return a list of courses for a given query."""
-    res = []
-    for sub_result in simple_query(es=es, query_input=input_query.query):
-        res.append(
-            {
-                **sub_result["_source"],
-                "score": sub_result["_score"],
-                "highlighted": sub_result["highlight"]["syllabus"][0],
-            }
+    res = [
+        {
+            **sub_result["_source"],
+            "score": sub_result["_score"],
+            "highlighted": sub_result["highlight"]["syllabus"][0],
+        }
+        for sub_result in simple_query(es=es, query_input=input_query.query)
+    ]
+    final_results = [
+        list(group)[0]
+        for _, group in groupby(
+            sorted(res, key=lambda x: x["name"]), lambda x: x["name"]
         )
-    # deduplicate results
-    final_results = []
-    for _, group in groupby(sorted(res, key=lambda x: x["name"]), lambda x: x["name"]):
-        final_results.append(list(group)[0])
+    ]
     return {"results": final_results}
 
 
 @app.post("/facet-search")
 async def facet_search(input_query: FacetedQueryBody = Body(...)):
     """Return a list of courses for a given query."""
-    res = []
-    for sub_result in faceted_search(es=es, body=input_query):
-        res.append(
-            {
-                **sub_result["_source"],
-                "score": sub_result["_score"],
-                "highlighted": sub_result["highlight"]["syllabus"][0],
-            }
+    res = [
+        {
+            **sub_result["_source"],
+            "score": sub_result["_score"],
+            "highlighted": sub_result["highlight"]["syllabus"][0],
+        }
+        for sub_result in faceted_search(es=es, body=input_query)
+    ]
+    final_results = [
+        list(group)[0]
+        for _, group in groupby(
+            sorted(res, key=lambda x: x["name"]), lambda x: x["name"]
         )
-    final_results = []
-    for _, group in groupby(sorted(res, key=lambda x: x["name"]), lambda x: x["name"]):
-        final_results.append(list(group)[0])
+    ]
     return {"results": final_results}
 
 
