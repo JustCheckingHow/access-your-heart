@@ -53,14 +53,14 @@ async def skills(skill_name: str = ""):
 async def professions() -> ProfessionsResponse:
     """Return a list of professions."""
     return ProfessionsResponse(
-        professions=[Profession(name=profession) for profession in PROFESSIONS]
+        professions=list({Profession(name=profession) for profession in PROFESSIONS})
     )
 
 
 @app.get("/hobbies")
 async def hobbies() -> HobbiesResponse:
     """Return a list of hobbies."""
-    return HobbiesResponse(hobbies=[Hobby(name=hobby) for hobby in HOBBIES])
+    return HobbiesResponse(hobbies=list({Hobby(name=hobby) for hobby in HOBBIES}))
 
 
 @app.post("/professions-for-hobbies")
