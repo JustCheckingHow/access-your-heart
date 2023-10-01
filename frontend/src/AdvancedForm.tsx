@@ -23,6 +23,8 @@ function AdvancedForm() {
     setSelectedSkills,
     selectedProfessions,
     setSelectedProfessions,
+    selectedHobbies,
+    setSelectedHobbies,
     selectedTimeSpent,
     setSelectedTimeSpent,
     selectedHaveQualification,
@@ -34,12 +36,15 @@ function AdvancedForm() {
   } = useAdvancedFormUserSelection();
 
   const userData = {
-    skills: selectedSkills,
-    professions: selectedProfessions,
-    timeSpent: selectedTimeSpent,
-    haveQualification: selectedHaveQualification,
-    professionsForHobbies: selectedProfessionsForHobbies,
-    cities: selectedCities,
+    skills: selectedSkills.map((skill) => skill.name),
+    professions: selectedProfessions.map((profession) => profession.name),
+    hobbies: selectedHobbies.map((hobby) => hobby.name),
+    // timeSpent: selectedTimeSpent,
+    // haveQualification: selectedHaveQualification,
+    // professionsForHobbies: selectedProfessionsForHobbies.map(
+    //   (profession) => profession.name
+    // ),
+    cities: selectedCities.map((city) => city.name),
   };
 
   const [professionForHobbies, setProfessionForHobbies] = useState<Option[]>(
@@ -81,7 +86,7 @@ function AdvancedForm() {
   async function handleSubmit() {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/search`,
+        `${import.meta.env.VITE_BACKEND_URL}/facet-search`,
         userData
       );
       console.log(response);
@@ -96,7 +101,7 @@ function AdvancedForm() {
         <Heading />
       </div>
       <ol className="border-l-2 border-primary dark:border-primary-500">
-        {step >= Step.Skills && (
+        {step >= Step.Skills ? (
           <li>
             <SkillsStep
               skillsOptions={skillsOptions}
@@ -104,8 +109,13 @@ function AdvancedForm() {
               onNext={() => setStep(Step.Profession)}
             />
           </li>
+        ) : (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="w-full h-4"></div>
+          </li>
         )}
-        {step >= Step.Profession && (
+        {step >= Step.Profession ? (
           <li>
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
             <ProfessionsStep
@@ -114,8 +124,13 @@ function AdvancedForm() {
               onNext={() => setStep(Step.Hobby)}
             />
           </li>
+        ) : (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="w-full h-4"></div>
+          </li>
         )}
-        {step >= Step.Hobby && (
+        {step >= Step.Hobby ? (
           <li>
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
             <HaveQualificationStep
@@ -123,19 +138,26 @@ function AdvancedForm() {
             />
             <HobbiesStep
               hobbiesOptions={hobbies}
-              onSelectedHobbiesChange={getProfessionForHobbies}
+              onSelectedHobbiesChange={(hobbies) => {
+                setSelectedHobbies(hobbies);
+                getProfessionForHobbies(hobbies);
+              }}
               onNext={() => setStep(Step.Time)}
             />
           </li>
+        ) : (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="w-full h-4"></div>
+          </li>
         )}
-        {step >= Step.Time && (
+        {step >= Step.Time ? (
           <li>
             <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
             <ProfessionsForHobbies
               professionsForHobbies={professionForHobbies}
               onChangeProfessionsForHobbies={setSelectedProfessionsForHobbies}
             />
-
             <TimeSpentStep onSelectedTimeSpent={setSelectedTimeSpent} />
             <CitiesStep
               citiesOptions={citiesOptions}
@@ -146,6 +168,11 @@ function AdvancedForm() {
                 handleSubmit();
               }}
             />
+          </li>
+        ) : (
+          <li>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="w-full h-4"></div>
           </li>
         )}
       </ol>

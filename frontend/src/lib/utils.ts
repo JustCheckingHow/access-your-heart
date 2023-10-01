@@ -41,8 +41,11 @@ export const useAdvancedFormUserSelection = () => {
   const [selectedProfessionsForHobbies, setSelectedProfessionsForHobbies] =
     useState<Option[]>([]);
   const [selectedCities, setSelectedCities] = useState<Option[]>([]);
+  const [selectedHobbies, setSelectedHobbies] = useState<Option[]>([]);
 
   return {
+    selectedHobbies,
+    setSelectedHobbies,
     selectedSkills,
     setSelectedSkills,
     selectedProfessions,
