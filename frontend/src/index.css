@@ -71,6 +71,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gradient-to-bl from-emerald-200 via-gray-100 to-white text-foreground;
   }
 }
