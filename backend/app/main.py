@@ -6,7 +6,7 @@ from fastapi import Body, FastAPI
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 
-from app.consts import HOBBIES, PROFESSIONS, SKILLS
+from app.consts import CITIES, HOBBIES, PROFESSIONS, SKILLS
 from app.models import (
     CitiesResponse,
     City,
@@ -73,13 +73,7 @@ async def professions_for_hobbies(data: ProfessionForHobbiesBody = Body(...)):
 @app.get("/cities")
 async def cities():
     """Return a list of cities."""
-    return CitiesResponse(
-        cities=[
-            City(name="San Francisco"),
-            City(name="New York"),
-            City(name="Los Angeles"),
-        ]
-    )
+    return CitiesResponse(cities=[City(name=name) for name in CITIES])
 
 
 @app.post("/search")

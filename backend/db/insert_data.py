@@ -126,7 +126,7 @@ def upload_courses(es: Elasticsearch):
             yield {"_index": COURSE_INDX, "_source": {**record}}
 
     stream = stream_record(
-        course_file="/Users/jm/repos/acces-your-heart/data/full_join.json"
+        course_file="/Users/jm/repos/acces-your-heart/data/JOIN_FINAL.json"
     )
     for ok, response in streaming_bulk(es, actions=stream):
         if not ok:
@@ -162,7 +162,7 @@ def create_es_instance(
 
 
 if __name__ == "__main__":
-    es = create_es_instance(host="206.189.56.21:9200")
+    es = create_es_instance(host="http://206.189.56.21:9200")
 
     create_courses_indx(es, SYLLABUS_INDX)
     upload_courses(es)
