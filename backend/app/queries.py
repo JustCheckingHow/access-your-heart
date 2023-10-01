@@ -26,7 +26,10 @@ def create_es_instance(use_pass: bool = False) -> Elasticsearch:
 def simple_query(es: Elasticsearch, query_input: str):
     query = {
         "query": {
-            "simple_query_string": {"query": query_input, "fields": ["syllabus"]}
+            "simple_query_string": {
+                "query": query_input,
+                "fields": ["syllabus", "tags"],
+            }
         },
         "highlight": {"fields": {"syllabus": {}}},  # highlight here
     }

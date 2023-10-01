@@ -95,7 +95,7 @@ async def main_search(input_query: QueryBody = Body(...)):
     final_results = []
     for _, group in groupby(sorted(res, key=lambda x: x["name"]), lambda x: x["name"]):
         final_results.append(list(group)[0])
-    return final_results
+    return {"results": final_results}
 
 
 @app.post("/facet-search")
@@ -112,4 +112,4 @@ async def facet_search(input_query: FacetedQueryBody = Body(...)):
     final_results = []
     for _, group in groupby(sorted(res, key=lambda x: x["name"]), lambda x: x["name"]):
         final_results.append(list(group)[0])
-    return final_results
+    return {"results": final_results}
