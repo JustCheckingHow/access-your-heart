@@ -17,6 +17,8 @@ import {
   useAdvancedFormUserSelection,
 } from "./lib/utils";
 import { Chat } from "./Chat";
+import { Bot, Terminal } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "./components/ui/alert";
 
 function AdvancedForm() {
   const {
@@ -124,6 +126,13 @@ function AdvancedForm() {
               onSelectedSkillsChange={setSelectedProfessions}
               onNext={() => setStep(Step.Hobby)}
             />
+            <Alert className="mx-auto max-w-xl bg-blue-100 text-blue-500 rounded-lg">
+              <Bot className="h-4 w-4" />
+              <AlertTitle>Szukasz pomocy?</AlertTitle>
+              <AlertDescription>
+                Możesz zapytać mnie o to, co Cię interesuje.
+              </AlertDescription>
+            </Alert>
             <Chat />
           </li>
         ) : (
