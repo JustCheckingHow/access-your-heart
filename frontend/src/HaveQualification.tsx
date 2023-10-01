@@ -29,6 +29,15 @@ export function HaveQualificationStep({
                 onSelectedHaveQualification(true);
               }
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setHaveQualification((prev) => !prev);
+                setDoesNotHaveQualification(false);
+                if (!haveQualification) {
+                  onSelectedHaveQualification(true);
+                }
+              }
+            }}
             disabled={doesNotHaveQualification}
           />
           <label
@@ -49,6 +58,15 @@ export function HaveQualificationStep({
               }
             }}
             disabled={haveQualification}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setDoesNotHaveQualification((prev) => !prev);
+                setHaveQualification(false);
+                if (!doesNotHaveQualification) {
+                  onSelectedHaveQualification(false);
+                }
+              }
+            }}
           />
           <label
             htmlFor="terms"

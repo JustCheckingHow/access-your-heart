@@ -19,10 +19,10 @@ import {
 import { Chat } from "./Chat";
 import { Bot } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./components/ui/alert";
-import { SAMPLE_SEARCH_RESULTS } from "./constants";
+import { SearchResultsProps } from "./components/ui/SearchResults";
 
 interface AdvancedFormProps {
-  onAdvancedFormSubmit: (data: any) => void;
+  onAdvancedFormSubmit: (data: SearchResultsProps) => void;
 }
 
 function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
@@ -112,13 +112,9 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
         }
       );
       console.log({ "facet-search": response });
-      // TODO: uncomment
-      //   onAdvancedFormSubmit(response.data);
-      onAdvancedFormSubmit(SAMPLE_SEARCH_RESULTS);
+      onAdvancedFormSubmit(response.data);
     } catch (error) {
       console.log(error);
-      // TODO: remove
-      onAdvancedFormSubmit(SAMPLE_SEARCH_RESULTS);
     }
   }
 
@@ -138,7 +134,7 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
           </li>
         ) : (
           <li>
-            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 dark:bg-secondary-500"></div>
             <div className="w-full h-4"></div>
           </li>
         )}
@@ -161,7 +157,7 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
           </li>
         ) : (
           <li>
-            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 dark:bg-secondary-500"></div>
             <div className="w-full h-4"></div>
           </li>
         )}
@@ -182,7 +178,7 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
           </li>
         ) : (
           <li>
-            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 dark:bg-secondary-500"></div>
             <div className="w-full h-4"></div>
           </li>
         )}
@@ -206,7 +202,7 @@ function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
           </li>
         ) : (
           <li>
-            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-secondary dark:bg-secondary-500"></div>
+            <div className="-ml-[9px] -mt-2 mr-3 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500"></div>
             <div className="w-full h-4"></div>
           </li>
         )}

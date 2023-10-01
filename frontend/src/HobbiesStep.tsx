@@ -40,6 +40,17 @@ export function HobbiesStep({
             }
           }}
           checked={selectedNone}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setSelectedNone((prev) => !prev);
+              if (!selectedNone) {
+                onSelectedHobbiesChange([]);
+                setCanGoNext(true);
+              } else {
+                setCanGoNext(false);
+              }
+            }
+          }}
         />
         <label
           htmlFor="terms"

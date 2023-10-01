@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { SearchResultsProps } from "@/components/ui/SearchResults";
 
 import { Heading } from "@/Heading";
-import { SAMPLE_SEARCH_RESULTS } from "@/constants";
 
 interface SearchPageProps {
   onChooseAdvanced: () => void;
@@ -37,13 +36,10 @@ const SearchPage = ({ onChooseAdvanced, onSearchSubmit }: SearchPageProps) => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        // TODO: uncomment
-        // onSearchSubmit(data);
-        onSearchSubmit(SAMPLE_SEARCH_RESULTS);
+        onSearchSubmit(data);
       })
       .catch((error) => {
         console.error("Error:", error);
-        onSearchSubmit(SAMPLE_SEARCH_RESULTS); // TODO: remove
       });
   };
 
