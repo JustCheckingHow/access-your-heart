@@ -1,3 +1,4 @@
+import itertools
 from itertools import groupby
 from typing import Literal
 
