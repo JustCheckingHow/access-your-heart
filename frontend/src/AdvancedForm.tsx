@@ -17,10 +17,15 @@ import {
   useAdvancedFormUserSelection,
 } from "./lib/utils";
 import { Chat } from "./Chat";
-import { Bot, Terminal } from "lucide-react";
+import { Bot } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./components/ui/alert";
+import { SAMPLE_SEARCH_RESULTS } from "./constants";
 
-function AdvancedForm() {
+interface AdvancedFormProps {
+  onAdvancedFormSubmit: (data: any) => void;
+}
+
+function AdvancedForm({ onAdvancedFormSubmit }: AdvancedFormProps) {
   const {
     selectedSkills,
     setSelectedSkills,
@@ -68,6 +73,13 @@ function AdvancedForm() {
         `${import.meta.env.VITE_BACKEND_URL}/professions-for-hobbies`,
         {
           hobbies: hobbies,
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+          },
         }
       )
       .catch((error) => {
@@ -90,11 +102,23 @@ function AdvancedForm() {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/facet-search`,
-        userData
+        userData,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+          },
+        }
       );
-      console.log(response);
+      console.log({ "facet-search": response });
+      // TODO: uncomment
+      //   onAdvancedFormSubmit(response.data);
+      onAdvancedFormSubmit(SAMPLE_SEARCH_RESULTS);
     } catch (error) {
       console.log(error);
+      // TODO: remove
+      onAdvancedFormSubmit(SAMPLE_SEARCH_RESULTS);
     }
   }
 

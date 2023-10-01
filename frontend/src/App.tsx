@@ -3,15 +3,31 @@ import { useState } from "react";
 import AdvancedForm from "./AdvancedForm";
 import { buttonVariants } from "./components/ui/button";
 import SearchPage from "./components/ui/SearchPage";
+import SearchResults, {
+  SearchResultsProps,
+} from "./components/ui/SearchResults";
 import { LanguageDropdown } from "./language-dropdown";
 import { cn } from "./lib/utils";
 
 function App() {
   const [isAdvanced, setIsAdvanced] = useState<boolean>(false);
+  const [searchResults, setSearchResults] = useState<SearchResultsProps | null>(
+    null
+  );
   const [language, setLanguage] = useState("pl");
 
   const handleAdvancedClick = () => {
     setIsAdvanced(!isAdvanced);
+  };
+
+  const onAdvancedFormSubmit = (data: SearchResultsProps) => {
+    console.log({ AdvancedForm: data });
+    setSearchResults(data);
+  };
+
+  const onSearchSubmit = (data: SearchResultsProps) => {
+    console.log({ SearchPage: data });
+    setSearchResults(data);
   };
   return (
     <>
@@ -32,6 +48,7 @@ function App() {
                   )}
                   onClick={() => {
                     setIsAdvanced(false);
+                    setSearchResults(null);
                   }}
                 >
                   <Home className="h-6 w-6" />
@@ -46,10 +63,17 @@ function App() {
         </div>
       </div>
       <div className="container mx-auto">
-        {!isAdvanced ? (
-          <SearchPage onChooseAdvanced={handleAdvancedClick} />
+        {searchResults === null ? (
+          !isAdvanced ? (
+            <SearchPage
+              onChooseAdvanced={handleAdvancedClick}
+              onSearchSubmit={onSearchSubmit}
+            />
+          ) : (
+            <AdvancedForm onAdvancedFormSubmit={onAdvancedFormSubmit} />
+          )
         ) : (
-          <AdvancedForm />
+          <SearchResults results={searchResults.results} />
         )}
       </div>
     </>

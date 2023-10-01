@@ -24,17 +24,16 @@ from app.queries import create_es_instance, faceted_search, simple_query
 
 app = FastAPI()
 
-es = create_es_instance(use_pass=False)
-
-origins = ["*"]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+es = create_es_instance(use_pass=False)
 
 
 @app.get("/skills")

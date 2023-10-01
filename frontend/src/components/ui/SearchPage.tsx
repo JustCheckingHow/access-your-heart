@@ -2,17 +2,18 @@ import React from "react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import SearchResults from "@/components/ui/SearchResults";
+import { SearchResultsProps } from "@/components/ui/SearchResults";
 
 import { Heading } from "@/Heading";
+import { SAMPLE_SEARCH_RESULTS } from "@/constants";
 
 interface SearchPageProps {
   onChooseAdvanced: () => void;
+  onSearchSubmit: (data: SearchResultsProps) => void;
 }
 
-const SearchPage = ({ onChooseAdvanced }: SearchPageProps) => {
+const SearchPage = ({ onChooseAdvanced, onSearchSubmit }: SearchPageProps) => {
   const [searchValue, setSearchValue] = React.useState<string>("");
-  const [searchResults, setSearchResults] = React.useState<string[]>([]);
 
   const handleChange = (e) => {
     setSearchValue(e.target.value);
@@ -21,11 +22,13 @@ const SearchPage = ({ onChooseAdvanced }: SearchPageProps) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("https://api.justcheckinghow.com/search", {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/search`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Headers": "*",
       },
       body: JSON.stringify({
         query: searchValue,
@@ -34,14 +37,17 @@ const SearchPage = ({ onChooseAdvanced }: SearchPageProps) => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        setSearchResults(data.results);
+        // TODO: uncomment
+        // onSearchSubmit(data);
+        onSearchSubmit(SAMPLE_SEARCH_RESULTS);
       })
       .catch((error) => {
         console.error("Error:", error);
+        onSearchSubmit(SAMPLE_SEARCH_RESULTS); // TODO: remove
       });
   };
 
-  return searchResults.length == 0 ? (
+  return (
     <>
       {/* make it centered */}
       <div className="flex justify-center" style={{ marginTop: "77px" }}>
@@ -88,8 +94,6 @@ const SearchPage = ({ onChooseAdvanced }: SearchPageProps) => {
         </div>
       </div>
     </>
-  ) : (
-    <SearchResults results={searchResults} />
   );
 };
 
